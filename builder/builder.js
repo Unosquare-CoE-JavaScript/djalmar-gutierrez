@@ -1,3 +1,6 @@
+//can use multiple builders, can have fluent interface
+
+
 class ClassGenerator {
   constructor(className) {
     this.className = className;
@@ -5,13 +8,16 @@ class ClassGenerator {
   }
 
   toStringImpl() {
-    let classString = `class ${this.className}\n`;
+    let classString = `class ${this.className} {\n`;
     let constructorParameters = this.attributes.join(', ');
-    classString += `  constructor(${constructorParameters}) {\n`
-    let constructorAttributes = this.attributes
-      .reduce((prev, attr) => prev += `   this.${attr} = ${attr};\n`, '')
-    classString += constructorAttributes;
-    classString += `  }\n}`
+    if (constructorParameters.length > 0) {
+      classString += `  constructor(${constructorParameters}) {\n`
+      let constructorAttributes = this.attributes
+        .reduce((prev, attr) => prev += `    this.${attr} = ${attr};\n`, '')
+      classString += constructorAttributes;
+      classString += `  }\n`
+    }
+    classString += `}`
     return classString;
   }
 }
@@ -37,3 +43,5 @@ let cb = new CodeBuilder('Person');
 cb.addField('name').addField('age');
 
 console.log(cb.toString());
+
+

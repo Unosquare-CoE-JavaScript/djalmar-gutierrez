@@ -1,3 +1,5 @@
+
+
 class Person {
     constructor(id, name) {
         this.id = id;
@@ -5,7 +7,7 @@ class Person {
     }
 
     toString() {
-        console.log(`id = ${this.id}, name = ${this.name}`);
+        return `id = ${this.id}, name = ${this.name}`;
     }
 }
 
