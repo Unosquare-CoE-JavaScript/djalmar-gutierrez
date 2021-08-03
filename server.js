@@ -1,7 +1,7 @@
 const express = require('express');
 const dotEnv = require('dotenv');
 const cors = require('cors');
-const dbConnection = require('./database/connection');
+const dbConnection = require('./rest-api/database/connection');
 const swaggerui = require('swagger-ui-express');
 const yaml = require('yamljs');
 const swaggerDocument = yaml.load('./swagger.yaml');
@@ -17,9 +17,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api/v1/product', require('./routes/productRoutes'));
+app.use('/api/v1/product', require('./rest-api/routes/productRoutes'));
 
-app.use('/api/v1/user', require('./routes/userRoutes'));
+app.use('/api/v1/user', require('./rest-api/routes/userRoutes'));
 
 app.get('/', (req, res) => {
     res.send('HELLOOOO');
