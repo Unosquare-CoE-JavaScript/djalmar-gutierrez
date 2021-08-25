@@ -1,12 +1,12 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { fromEvent, merge } from 'rxjs';
-import { map, scan, startWith } from 'rxjs/operators';
+import { map, mapTo, scan, startWith } from 'rxjs/operators';
 import { slideshowAnimation } from './slideshow.animations';
 
 const images: string[] = [
   'assets/lion-roar.jpg',
   'assets/maxres.jpg',
-  'assets/maxresdefault.jpg'
+  'assets/maxresdefault.jpg',
 ];
 
 interface Move {
@@ -21,14 +21,14 @@ interface Position {
 
 enum Direction {
   left = 'left',
-  right= 'right'
+  right = 'right',
 }
 
 @Component({
   selector: 'app-slideshow',
   styleUrls: ['./slideshow.component.css'],
   templateUrl: './slideshow.component.html',
-  animations: [slideshowAnimation]
+  animations: [slideshowAnimation],
 })
 export class SlideshowComponent implements AfterViewInit {
   @ViewChild('previous') previous;
@@ -37,7 +37,7 @@ export class SlideshowComponent implements AfterViewInit {
   images: string[] = images;
   currentPosition: Position = {
     index: 0,
-    direction: Direction.left
+    direction: Direction.left,
   };
 
   ngAfterViewInit() {
@@ -49,12 +49,37 @@ export class SlideshowComponent implements AfterViewInit {
     // Pass an object that looks like this { shift: -1, direction: Direction.right }
     // Combine both streams to update the same slideshow
     // -------------------------------------------------------------------
+
+    const rightClick = fromEvent(
+      this.getNativeElement(this.next),
+      'click'
+    ).pipe(map((x) => ({ index: 1, direction: Direction.right })));
+
+    const leftClick = fromEvent(
+      this.getNativeElement(this.previous),
+      'click'
+    ).pipe(map((x) => ({ index: -1, direction: Direction.left })));
+
+    merge(rightClick, leftClick)
+      
+      .subscribe((x) => {
+        this.currentPosition = Object.assign(
+          {},
+          {
+            index: this.getAdjustedIndex(this.currentPosition.index, x.index),
+            direction: x.direction,
+          }
+        );
+      });
   }
 
   getAdjustedIndex(current, shift) {
     const projectedIndex = current + shift;
     const length = this.images.length;
-    return this.adjustForMinIndex(length, this.adjustForMaxIndex(length, projectedIndex));
+    return this.adjustForMinIndex(
+      length,
+      this.adjustForMaxIndex(length, projectedIndex)
+    );
   }
 
   adjustForMinIndex(length, index) {

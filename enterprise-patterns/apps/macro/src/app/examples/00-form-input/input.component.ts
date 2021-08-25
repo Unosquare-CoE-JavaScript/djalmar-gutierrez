@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/internal/operators';
 
 @Component({
@@ -39,5 +40,8 @@ export class InputComponent implements OnInit {
     // Reverse the output i.e. Lukas becomes sakuL
     // BONUS: How would you URL encode the output?
     // -------------------------------------------------------------------
+    this.searchControl.valueChanges
+      .pipe(map((inputValue) => inputValue.toUpperCase().split('').reverse().join('')))
+      .subscribe((result) => (this.queryString = encodeURI(result)));
   }
 }

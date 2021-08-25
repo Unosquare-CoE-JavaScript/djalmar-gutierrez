@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { fromEvent } from 'rxjs';
-import { map, pairwise, switchMap, takeUntil } from 'rxjs/operators';
+import { fromEvent, pipe } from 'rxjs';
+import { concatMap, map, pairwise, switchMap, takeUntil } from 'rxjs/operators';
 import * as $ from 'jquery';
 
 interface Line {
@@ -49,13 +49,28 @@ export class AnnotateComponent implements OnInit {
     // Sequence them appropriately
     // Helper functions have been given to help keep you focused
     // -------------------------------------------------------------------
+
+    var mouseDown = fromEvent(document, 'mousedown');
+    var mouseMove = fromEvent(document, 'mousemove');
+    var mouseUp = fromEvent(document, 'mouseup');
+
+    mouseDown.pipe(
+      concatMap(() =>
+        mouseMove.pipe(
+          map((e: MouseEvent) => this.generatePosition(e)),
+          pairwise(),
+          map(([e1, e2]) => this.generateCoordinates(e1, e2)),
+          takeUntil(mouseUp)
+        )
+      )
+    ).subscribe(line=> this.lines = [...this.lines, line]);
   }
 
   generatePosition(e: MouseEvent) {
     const offset = $(e.target).offset();
     return {
       x: e.clientX - offset.left,
-      y: e.pageY - offset.top
+      y: e.pageY - offset.top,
     };
   }
 

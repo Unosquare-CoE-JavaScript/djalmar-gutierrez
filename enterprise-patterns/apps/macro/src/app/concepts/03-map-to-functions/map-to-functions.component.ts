@@ -32,7 +32,7 @@ export class MapToFunctionsComponent implements OnInit {
     const upArrow$ = fromEvent(document, 'keydown')
       .pipe(
         filter((event: KeyboardEvent) => event.key === 'ArrowUp'),
-        mapTo(position => this.decrement(position, 'y', 10))
+        mapTo((position, y) => this.decrement(position, y, 10))
       );
 
     const downArrow$ = fromEvent(document, 'keydown')
@@ -44,7 +44,7 @@ export class MapToFunctionsComponent implements OnInit {
     merge(leftArrow$, rightArrow$, upArrow$, downArrow$)
       .pipe(
         startWith({x: 100, y: 100}),
-        scan((acc: any, curr: Function) => curr(acc))
+        scan((acc: any, curr: Function) => {console.log(acc, curr); return curr(acc, 'x')})
       )
       .subscribe(position => this.position = position);
   }

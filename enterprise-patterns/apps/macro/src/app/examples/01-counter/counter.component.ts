@@ -4,18 +4,20 @@ import { scan, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-counter',
-  styles: [`
-    mat-card {
-      width: 400px;
-      box-sizing: border-box;
-      margin: 16px;
-    }
+  styles: [
+    `
+      mat-card {
+        width: 400px;
+        box-sizing: border-box;
+        margin: 16px;
+      }
 
-    .card-container {
-      display: flex;
-      flex-flow: row wrap;
-    }
-  `],
+      .card-container {
+        display: flex;
+        flex-flow: row wrap;
+      }
+    `,
+  ],
   template: `
     <div class="card-container">
       <mat-card>
@@ -27,11 +29,11 @@ import { scan, startWith } from 'rxjs/operators';
       <mat-card>
         <div>
           <h2>Beast Mode Activated</h2>
-          <strong>{{count}} times!</strong>
+          <strong>{{ count }} times!</strong>
         </div>
       </mat-card>
     </div>
-  `
+  `,
 })
 export class CounterComponent implements AfterViewInit {
   @ViewChild('btn') btn;
@@ -43,6 +45,10 @@ export class CounterComponent implements AfterViewInit {
     // -------------------------------------------------------------------
     // Capture the btn click and increment count by 1
     // -------------------------------------------------------------------
+
+    fromEvent(this.getNativeElement(this.btn), 'click').subscribe(
+      (x) => this.count++
+    );
   }
 
   getNativeElement(element) {

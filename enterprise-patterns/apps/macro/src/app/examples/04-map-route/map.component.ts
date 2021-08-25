@@ -12,32 +12,34 @@ interface Line {
 
 @Component({
   selector: 'app-map',
-  styles: [`
-    mat-card {
-      width: 100%;
-      box-sizing: border-box;
-      margin: 16px;
-      background: #fff url(assets/london-map.jpg);
-      background-size: cover;
-    }
+  styles: [
+    `
+      mat-card {
+        width: 100%;
+        box-sizing: border-box;
+        margin: 16px;
+        background: #fff url(assets/london-map.jpg);
+        background-size: cover;
+      }
 
-    .card-container {
-      display: flex;
-      flex-flow: row wrap;
-      position: fixed;
-      top: 70px;
-      bottom: 0;
-      left: 0;
-      right: 0;
-    }
-  `],
+      .card-container {
+        display: flex;
+        flex-flow: row wrap;
+        position: fixed;
+        top: 70px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+    `,
+  ],
   template: `
     <div class="card-container">
       <mat-card>
         <app-line *ngFor="let line of lines" [line]="line"></app-line>
       </mat-card>
     </div>
-  `
+  `,
 })
 export class MapComponent implements OnInit {
   lines: Line[] = [];
@@ -51,13 +53,21 @@ export class MapComponent implements OnInit {
     // Update the stream to accommodate fluid lines
     // Helper functions have been given to help keep you focused
     // -------------------------------------------------------------------
+
+    fromEvent(document, 'click')
+      .pipe(
+        map((e: MouseEvent) => this.generatePosition(e)),
+        pairwise(),
+        map(([e1, e2]) => this.generateCoordinates(e1, e2))
+      )
+      .subscribe((line) => (this.lines = [...this.lines, line]));
   }
 
   generatePosition(e: MouseEvent) {
     const offset = $(e.target).offset();
     return {
       x: e.clientX - offset.left,
-      y: e.pageY - offset.top
+      y: e.pageY - offset.top,
     };
   }
 
