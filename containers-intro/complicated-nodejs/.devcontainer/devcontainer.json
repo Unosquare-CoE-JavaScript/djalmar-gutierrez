@@ -1,0 +1,16 @@
+{
+  "name": "VS CODE sample",
+  "dockerFile": "Dockerfile",
+  "appPort": [3000],
+  "runArgs": ["-u", "node"],
+  "settings": {
+    "workbench.colorTheme": "Hot Dog Stand",
+    "terminal.integrated.automationShell.linux": "/bin/bash"
+  },
+  "postCreateCommand": "npm install",
+  "extensions": [
+    "somekittens.hot-dog-stand",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode"
+  ]
+}
