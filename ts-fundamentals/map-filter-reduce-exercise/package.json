@@ -1,0 +1,14 @@
+{
+  "name": "map-filter-reduce-exercise",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "tsc  && node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^4.4.3"
+  }
+}
