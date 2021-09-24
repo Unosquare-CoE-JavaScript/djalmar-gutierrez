@@ -1,0 +1,10 @@
+"use strict";
+exports.__esModule = true;
+console.log(true);
+console.log(false);
+console.log(true);
+console.log(true);
+console.log(true);
+console.log(true);
+console.log(false);
+console.log(true);
